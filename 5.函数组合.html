@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 函数组合 -> 饲养函数 -> compose
+    // 若干个纯函数、偏函数、柯里化函数、组合成一个新函数，形成数据传递，并形成一个有序执行的结果
+
+    function toUpperCase(str) {
+      return str.toUpperCase()
+    }
+    function exclaim(str) {
+      return str + ',' + '|'
+    }
+
+    function compose(f, g) {
+      return function (x) {
+        return f(g(x)) // 左倾方式，从右向左执行
+      }
+    }
+
+    const f = compose(exclaim, toUpperCase)
+    console.log(f('abs'))
+
+
+    function spilt(str) {
+
+      return str.split(',')
+    }
+    function reverse(str) {
+
+
+      return str.reverse()
+    }
+    function join(str) {
+
+      return str.join(',')
+    }
+
+
+
+
+    // 使用while循环
+    // function com() {
+    //   let args = Array.prototype.slice.call(arguments),
+    //     f = args[args.length - 1],
+    //     len = args.length - 1
+    //   return function (x) {
+    //     let res = args[len](x)
+    //     while (len) {
+    //       len--
+    //       res = args[len](res)
+    //     }
+    //     console.log(res)
+    //     return res
+    //   }
+    // }
+    // 使用reduce
+    function com() {
+      let args = Array.prototype.slice.call(arguments)
+      return function (x) {
+       return args.reduceRight((pre, item) => {
+          return item(pre)
+        }, x)
+      }
+    }
+    let f1 = com(join, reverse, spilt, exclaim, toUpperCase)
+    console.log(f1('abc'))
+  </script>
+</body>
+
+</html>
