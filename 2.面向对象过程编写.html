@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="context"></div>
+  <button id="btn">点击</button>
+  <script>
+    // 面向对象：高度复用
+    function Test () {
+      this.btn = document.getElementById('btn')
+      this.context = document.getElementById('context')
+      this.test = 213
+    }
+    Test.prototype = {
+      init () {
+        this.bindEvent()
+      },
+      bindEvent () {
+        this.btn.addEventListener('click', this.changeContext.bind(this), false)
+      },
+      changeContext () {
+        this.context.innerHTML = this.test
+      }
+    }
+    const test = new Test()
+    console.log(test)
+    test.init()
+  </script>
+</body>
+</html>

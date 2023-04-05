@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 纯函数：相同输入得到相同输出，不依赖外部环境也不产生副总用
+    // 输出完全取决于输入
+
+    function test(num) {
+      console.log(num + 1)
+    }
+    test(2)
+
+    // 副作用：只要跟函数外部环境发生了交互就是副作用
+
+    // slice // 不改变原数组，没有副作用，纯函数
+    // splice // 改变原数组，有副作用， 不纯函数
+
+    // 优点：可移植性,透明易读，可同步运行
+
+    let obj = { a: 1 }
+
+    function get(obj) {
+      let newObj = JSON.parse(JSON.stringify(obj))
+      obj.b = 2
+      return obj
+    }
+
+    // 纯函数带记忆性质
+    function te(fn) {
+      let cache = {}
+      return function () {
+        // 父级参数
+        const args = JSON.stringify(arguments)
+        console.log(args)
+        cache[args] = cache[args]
+          ? cache[args] + '(来自缓存池)'
+          : fn(...arguments);
+
+        return cache
+      }
+    }
+    const add = te(function () {
+
+      let argLen = arguments.length,
+        item,
+        res = ''
+      for (let i = 0; i < argLen; i++) {
+        item = arguments[i]
+
+        res += item
+      }
+      return res
+    })
+
+    console.log(add(1, 2))
+    console.log(add(1, 2))
+    console.log(add(1, 3))
+    console.log(add(1, 3))
+  </script>
+
+
+
+</body>
+
+</html>
