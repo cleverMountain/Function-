@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 高阶函数： 一个函数的参数含有另外一个函数，便于扩展，如回调函数，每一个函数都应该有一个功能
+    let arr = [1, 2, 3]
+    function add (val) {
+      return val + 1
+    }
+    let res = arr.map(add)
+    console.log(res)
+
+    // reduce 归纳函数
+    function collect (pre, cur) {
+      if (cur > 1) {
+        pre += cur
+      }
+      return pre
+    }
+    let res1 = arr.reduce(collect, '')
+    console.log(res1)
+  </script>
+</body>
+</html>

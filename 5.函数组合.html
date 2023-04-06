@@ -73,6 +73,40 @@
     }
     let f1 = com(join, reverse, spilt, exclaim, toUpperCase)
     console.log(f1('abc'))
+
+
+    // 结合律 Associativity,任意组合可以，函数组合内部参数进行再组合，结果不受影响
+    
+
+    // pointfree
+
+    let arr = [
+      {
+        isFree: 1,
+        ag: 30
+      },
+      {
+        isFree: 0,
+        ag: 18
+      },
+      {
+        isFree: 1,
+        ag: 10
+      }
+    ]
+    function agMoreThan (data) {
+      return data.ag > 20 && data
+    }
+    function isFree (data) {
+      return data.isFree === 1 && data
+    }
+    let arr1 = []
+    arr.forEach(item => {
+      let res = com(agMoreThan, isFree)
+      console.log(res(item))
+      res(item) && arr1.push(res(item))
+    })
+    console.log(arr1)
   </script>
 </body>
 
