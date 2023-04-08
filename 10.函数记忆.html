@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    let times = 0
+    function factorial(n) {
+      times++
+      if (n === 1 || n === 0) {
+        return 1
+      } else {
+        return n * factorial(n - 1)
+      }
+
+    }
+
+
+    // for (let i = 0; i < 6; i++) {
+    //   factorial(i)
+    // }
+    // console.log(times)
+    /**
+     * 0! => 1
+     * 1! => 1
+     * 2! => 2
+     * 3! => 3
+     * 4! => 4
+     * 5! => 5
+    */
+
+
+    // 利用立即执行函数
+    let factorial1 = (() => {
+      let cache = []
+      let times1 = 0
+      return function factorial1(n) {
+        times1++
+        if (n === 0 || n === 1) {
+          cache[0] = 1
+          cache[1] = 1
+
+          return 1
+        }
+        cache[n] = n * factorial1(n - 1)
+        console.log(cache)
+        return cache[n]
+      }
+    })()
+    console.time(1)
+    console.log(factorial(10))
+    console.timeEnd(1)
+    console.time(2)
+    console.log(factorial1(10))
+    console.timeEnd(2)
+
+
+    // 利用记忆函数,缓存每次运算的结果,如果遇到相同的某次则直接使用结果
+    function memory(fn) {
+      let cache = {}
+      return function () {
+        console.log(cache)
+        let k = [].join.call(arguments, ',')
+        cache[k] = cache[k] ? cache[k] : fn.apply(this, arguments)
+        return cache[k]
+      }
+    }
+    let pa = memory(factorial)
+
+    // for (let i = 0; i < 6; i++) {
+    //   pa(i)
+    // }
+
+
+    console.time('no memory')
+    console.log(factorial(10))
+    console.timeEnd('no memory')
+
+    console.time('memory')
+    console.log(pa(10))
+    console.timeEnd('memory')
+
+
+    // 斐波那契
+    // 1 1 2 3 5 8 13
+    function fb(n) {
+      return n <= 2 ? 1 : fb(n - 1) + fb(n - 2)
+    }
+  </script>
+</body>
+
+</html>
