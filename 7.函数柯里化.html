@@ -10,6 +10,8 @@
 
 <body>
   <script>
+    // 将一个多参数的函数转化成多个单参数的函数
+    // 将n元函数转化成n个一元函数
     // 1.简化代码
     // 2.提高维护性
     // 3.功能单一化
@@ -44,35 +46,104 @@
 
     function curry2(fn, len) {
       len = len || fn.length
-     
+
       let func = function (fn, ...outArgs) {
 
         return function (...innerArgs) {
           let args = [...outArgs, ...innerArgs]
+
           return fn.apply(null, args)
         }
       }
       // add1(1)
       return function (...args) {
+
         // 1 < 2
         let argLen = args.length
-     
+
         if (argLen < len) {
           // [add, 1]
           let forMatArr = [fn, ...args]
           // curry2(func(add, 1), 1) => curry2(function ())
-          return curry2(func.apply(null, forMatArr), len - argLen)
+          let d = curry2(func.apply(null, forMatArr), len - argLen)
+          console.log(d, 'sd7')
+          return d
         } else {
           return fn.apply(null, [...args])
         }
       }
     }
-    let add1 = curry2(add)
-    let add2 = add1(1)(2)
-    function add(a, b) {
-      return a + b
+    function add(a, b, c) {
+      return a + b + c
     }
+    let add1 = curry2(add)
+    console.log(add1)
+
+    let add2 = add1(1)
+    /**
+   * return function () {
+   *  argLen = 1
+   *  forMatArr = [add, 1]
+   *  curry2(func.apply(null, [add, 1]) , 1)
+   * }
+   * 
+   * func.apply(null, [add, 1]) 
+   * => function (fn, ...outArgs) {
+   *    function ()
+   *  }
+  */
     console.log(add2)
+    let add3 = add2(2)
+    console.log(add3)
+    let add4 = add3(3)
+    console.log(add4)
+
+
+
+    let func = function (fn, ...outArgs) {
+
+      return function (...innerArgs) {
+        let args = [...outArgs, ...innerArgs]
+        return fn.apply(null, args)
+      }
+    }
+    let res = func.apply(null, [add, 1])
+    console.log(res)
+
+
+
+    // 对addeventListener封装
+    function addEvent(el, type, fn, capture) {
+      if (window.addEventListener) {
+        el.addEventListener(type, fn, capture)
+      } else if (window.attachEvent) {
+        el.attachEvent('on' + type, function () {
+          fn.call(el)
+        })
+      } else {
+        el['on' + type] = fn
+      }
+    }
+
+    // 
+    let addEv = (function () {
+      if (window.addEventListener) {
+        return function (el, type, fn, capture) {
+          el.addEventListener(type, fn, capture)
+        }
+      } else if (window.attachEvent) {
+        return function (el, type, fn) {
+          el.attachEvent('on' + type, function () {
+            fn.call(el)
+          })
+        }
+      } else {
+        return function (el, type) {
+          el['on' + type] = fn
+        }
+      }
+    })();
+    console.log(addEv)
   </script>
 </body>
 

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 函数的元 -> 参数个数
+    // 有两个参数的函数 -> 二元函数
+    // 偏函数 -> partial Application 
+    // 偏函数叫做部分固定函数，指固定一个函数的的一些参数然后产生另一个更小的元函数
+    // 将n元函数转化成n-x元函数
+
+    Function.prototype.bind = function () {
+      const fn = this
+      const _this = Array.prototype.slice.call(arguments, 0, 1) || window
+      const otherArgus = Array.prototype.slice.call(arguments, 1)
+      return function () {
+        const cbArgus = Array.prototype.slice.call(arguments, 0)
+        _this.fn = fn
+        const res = _this.fn(...otherArgus, ...cbArgus)
+        delete _this.fn
+        return res
+      }
+    }
+    function add(a, b, c, d) {
+      return a + b + c + d
+    }
+    // 使用bind进行偏函数化
+    let add1 = add.bind(null, 1, 2)
+    console.log(add1(3, 4))
+
+
+
+    // 封装自己的偏函数,使用bind
+    function partial(fn, ...args) {
+      return fn.bind(this, ...args)
+    }
+    let add3 = partial(add, 1, 2)
+    console.log(add3(3, 4))
+
+
+
+    // 使用闭包
+    Function.prototype.partial = function (...args) {
+      let fn = this
+      return function (...cbArgs) {
+        return fn(...args, ...cbArgs)
+      }
+    }
+    let add4 = add.partial(1, 2)
+    console.log(add4(3, 4))
+
+
+    // 例子，聊天
+    function format(time, options) {
+      return time + '' + options.name + '' + options.info
+    }
+
+    const out = format.partial(new Date().getMinutes() + ':' + new Date().getSeconds())
+    console.log(out({
+      name: 'aa',
+      info: '来了'
+    }))
+  </script>
+</body>
+
+</html>

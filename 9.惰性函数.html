@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button id="btn">点击</button>
+  <script>
+    // 缺点：timeStamp 全局变量， 多次走if判断
+    let timeStamp = null
+    function getTimeStamp() {
+      if (timeStamp) {
+        return timeStamp
+      }
+      timeStamp = new Date().getTime()
+      return timeStamp
+    }
+    console.log(getTimeStamp())
+    console.log(getTimeStamp())
+    console.log(getTimeStamp())
+
+
+    // 使用立即函数, 每次执行会重新赋值timeStamp
+    const getTime = (() => {
+      const timeStamp = new Date().getTime()
+      return function () {
+        return timeStamp
+      }
+    })();
+    console.log(getTime())
+    console.log(getTime())
+
+
+
+    // 函数内部改变自身的机制
+    // 惰性函数再函数执行的分支只会在函数第一次调用的时候执行，在第一次调用的过程中，该函数被覆盖为另一个
+    // 按照合适的方式执行的函数,这样任何对原函数的调用就不用再经过执行的分支了
+    let lazy = function () {
+      let timeStamp = new Date().getTime()
+      console.log(1)
+      lazy = function () {
+        console.log(2)
+        return timeStamp
+      }
+      // return timeStamp
+      return lazy()
+    }
+    console.log(lazy())
+    console.log(lazy())
+    console.log(lazy())
+
+
+
+
+
+    let event = function (el, type, fn, capture) {
+      if (window.addEventListener) {
+        console.log(11)
+        event = function (el, type, fn, capture) {
+          el.addEventListener(type, fn, capture)
+        }
+      } else if (window.attachEvent) {
+        console.log(13)
+        event = function (el, type, fn) {
+          el.attachEvent('on' + type, function () {
+            fn.call(el)
+          })
+        }
+      } else {
+        console.log(14)
+        event = function (el, type) {
+          el['on' + type] = fn
+        }
+      }
+      // 再次执行
+      event(btn, 'click', btnClick, false)
+    }
+    const btn = document.getElementById('btn')
+    function btnClick() {
+      console.log(1)
+    }
+    // 只是执行了函数的第一次,得到event函数,需要再次执行
+    event(btn, 'click', btnClick, false)
+
+
+
+
+    // 功能体
+    let test = function (num) {
+      switch (num) {
+        case 1:
+          test = function () {
+            console.log(1)
+          }
+          break
+        case 2:
+          test = function () {
+            console.log(2)
+          }
+          break
+      }
+      test(num)
+    }
+    test(1)
+    test(2)
+    test(2)
+  </script>
+</body>
+
+</html>
