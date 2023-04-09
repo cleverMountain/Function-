@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #d1 {
+      width: 200px;
+      height: 200px;
+      background-color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="d1"></div>
+  <button id="get">获取</button>
+  <script>
+    // 函数防抖，只要触发事件就重新计时
+    const d1 = document.getElementById('d1')
+    d1.addEventListener('mousemove', debouce(move, 1000, true), false)
+    // 初次未触发，污染全局
+    // let t = null
+    // function move() {
+
+    // clearTimeout(t)
+    //   t = setTimeout(() => {
+    //     console.log(1)
+    //   }, 1000)
+
+
+    // }
+    function move() {
+      console.log(1)
+    }
+    function debouce(fn, time, immeadiate) {
+      let t = null
+      immeadiate = immeadiate || false
+      return function () {
+        let self = this
+        let args = arguments
+        if (!t && immeadiate) {
+          fn.apply(self, args)
+        }
+        t && clearInterval(t)
+        t = setTimeout(() => {
+          fn.apply(self, args)
+        }, time)
+      }
+    }
+    let get = document.getElementById('get')
+    get.addEventListener('click', debouce(btnClick, 1000, true))
+    function btnClick () {
+      console.log('获取')
+    }
+  </script>
+</body>
+
+</html>

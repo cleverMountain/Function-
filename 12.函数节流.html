@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <input id="in">
+  <!-- 某个时间内只触发一次 -->
+  <script>
+    let inp = document.getElementById('in')
+    inp.addEventListener('keyup', throttle(check, 1000))
+
+    function check() {
+
+   
+        let val = this.value
+        console.log(val)
+   
+
+    }
+
+    // 时间戳
+    function throttle (fn, time) {
+      let timePre = new Date().getTime(),
+          t = null
+      return function () {
+        let args = arguments,
+            self = this
+        let timeNow = new Date().getTime()
+        clearTimeout(t)
+        if (timeNow - timePre >= time) {
+          fn.apply(self, args)
+          timePre = timeNow
+        } else {
+          // 最后再执行一次
+          t = setTimeout(() => {
+            fn.apply(self, args)
+          }, time)
+        }
+      }
+    }
+
+
+    // 
+  </script>
+</body>
+
+</html>
